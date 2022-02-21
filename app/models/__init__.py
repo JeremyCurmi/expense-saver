@@ -1,1 +1,1 @@
-from app.models.product import *
+from app.models.models import *
