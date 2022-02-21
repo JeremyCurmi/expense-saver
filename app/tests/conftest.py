@@ -3,7 +3,21 @@ from datetime import datetime
 from unicodedata import name
 
 from app.core.db import Base, SessionLocal
-from app.models import Product
+from app.models import (
+    Category,
+    CategoryType,
+    Product,
+    ProductCategory,
+    ProductShop,
+    Shop,
+)
+from app.services.services import (
+    CategoryCrud,
+    ProductCategoryCrud,
+    ProductCrud,
+    ProductShopsCrud,
+    ShopCrud,
+)
 from pytest import fixture
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -18,10 +32,35 @@ def set_env_vars():
 
 @fixture
 def new_product():
-    product = Product(name="test_product")
-    product.id = 1
-    product.last_modified = datetime.now()
+    product = Product(
+        id=1,
+        name="test_product",
+        updated_at=datetime.now(),
+    )
     return product
+
+
+@fixture
+def new_shop():
+    shop = Shop(name="test_shop")
+    shop.id = 1
+    return shop
+
+
+@fixture
+def new_product_shop():
+    product_shop = ProductShop(product_id=1, shop_id=1, price=1.0)
+    return product_shop
+
+
+@fixture
+def new_category():
+    return Category(name=CategoryType.food)
+
+
+@fixture
+def new_product_category():
+    return ProductCategory(product_id=1, category_id=1)
 
 
 @fixture(scope="session")
@@ -40,13 +79,31 @@ def setup_db():
     Base.metadata.create_all(bind=engine)
 
     db = TestingSessionLocal()
-
-    product1 = Product(name="test_product_1")
-    product2 = Product(name="test_product_2")
-    db.add_all([product1, product2])
-    db.commit()
+    seed_database(db)
 
     yield db
 
     db.close()
     Base.metadata.drop_all(bind=engine)
+
+
+def seed_database(db):
+    product = ProductCrud(db)
+    product.create(name="test_product_1")
+    product.create(name="test_product_2")
+
+    shop = ShopCrud(db)
+    shop.create(name="test_shop_1")
+    shop.create(name="test_shop_2")
+
+    product_shop = ProductShopsCrud(db)
+    product_shop.create(product_id=1, shop_id=1, price=1.0)
+    product_shop.create(product_id=1, shop_id=2, price=2.0)
+
+    category = CategoryCrud(db)
+    category.create(name=CategoryType.food)
+
+    product_category = ProductCategoryCrud(db)
+    product_category.create(product_id=1, category_id=1)
+    product_category.create(product_id=2, category_id=1)
+    product_category.create(product_id=2, category_id=3)
