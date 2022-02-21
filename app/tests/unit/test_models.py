@@ -1,5 +1,5 @@
 from app.models import Product
-from app.services.product import get_product_by_name
+from app.services.product import get_product_by_id, get_product_by_name
 
 
 def test_new_product(new_product):
@@ -10,16 +10,17 @@ def test_new_product(new_product):
 
 
 # TODO test get_product_by_id
+def test_get_product_by_id(setup_db):
+    product = get_product_by_id(setup_db, 1)
+    assert product.id == 1
+    assert product.name == "test_product_1"
 
 
 def test_get_product_by_name(setup_db):
     """When a product is retrieved by id, check schema"""
-    # product = setup_db.query(Product).filter(Product.name == "test_product_1").first()
     product = get_product_by_name(setup_db, "test_product_1")
     assert product.id == 1
     assert product.name == "test_product_1"
-    assert product is not None
-    print(product)
 
 
 def test_get_products(setup_db):
