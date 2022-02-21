@@ -15,6 +15,21 @@ from sqlalchemy.orm import relationship
 from sqlalchemy_utils import ChoiceType
 
 
+class CategoryType(Enum):
+    # TODO: add more categories
+    food = 1
+    drink = 2
+    other = 3
+
+
+class Unit(Enum):
+    kg = 1
+    l = 2
+    g = 3
+    ml = 4
+    piece = 5
+
+
 class Product(Base):
     __tablename__ = "products"
 
@@ -48,19 +63,13 @@ class ProductShop(Base):
     __tablename__ = "product_shops"
     product_id = Column(Integer, ForeignKey("products.id"), primary_key=True)
     shop_id = Column(Integer, ForeignKey("shops.id"), primary_key=True)
+    quantity_id = Column(Integer, ForeignKey("quantities.id"), primary_key=True)
     price = Column(Float, nullable=False)
 
-    PrimaryKeyConstraint("product_id", "shop_id")
+    PrimaryKeyConstraint("product_id", "shop_id", "quantity_id")
 
     def __repr__(self) -> str:
         return f"ProductShop(product_id={self.product_id}, shop_id={self.shop_id})"
-
-
-class CategoryType(Enum):
-    # TODO: add more categories
-    food = 1
-    drink = 2
-    other = 3
 
 
 class Category(Base):
@@ -83,19 +92,11 @@ class ProductCategory(Base):
         return f"ProductCategory(product_id={self.product_id}, category_id={self.category_id})"
 
 
-# class Quantity(Base):
-#     __tablename__ = "quantities"
-#     id = Column(Integer, primary_key=True, autoincrement=True)
-#     unit = Column(String(50), nullable=False)
-#     value = Column(Integer, nullable=False)
+class Quantity(Base):
+    __tablename__ = "quantities"
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    unit = Column(ChoiceType(Unit, impl=Integer()), nullable=False)
+    value = Column(Integer, nullable=False)
 
-#     def __repr__(self) -> str:
-#         return f"Quantity(unit={self.unit}, value={self.value})"
-
-
-# class Price(Base):
-#     pass
-
-
-# class ProductPrice(Base):
-#     pass
+    def __repr__(self) -> str:
+        return f"Quantity(unit={self.unit}, value={self.value})"
