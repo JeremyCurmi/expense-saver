@@ -37,6 +37,7 @@ def upgrade():
             "product_id", sa.Integer, sa.ForeignKey("products.id"), onupdate="CASCADE"
         ),
         sa.Column("shop_id", sa.Integer, sa.ForeignKey("shops.id"), onupdate="CASCADE"),
+        sa.Column("price", sa.Float, nullable=False),
         sa.PrimaryKeyConstraint("product_id", "shop_id"),
     )
 
