@@ -65,7 +65,6 @@ class ProductShop(Base):
     shop_id = Column(Integer, ForeignKey("shops.id"), primary_key=True)
     quantity_id = Column(Integer, ForeignKey("quantities.id"), primary_key=True)
     price = Column(Float, nullable=False)
-
     PrimaryKeyConstraint("product_id", "shop_id", "quantity_id")
 
     def __repr__(self) -> str:

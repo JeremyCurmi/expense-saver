@@ -11,11 +11,13 @@ from app.models import (
     ProductShop,
     Shop,
 )
+from app.models.models import Quantity
 from app.services.services import (
     CategoryCrud,
     ProductCategoryCrud,
     ProductCrud,
     ProductShopsCrud,
+    QuantityCrud,
     ShopCrud,
 )
 from pytest import fixture
@@ -96,9 +98,11 @@ def seed_database(db):
     shop.create(name="test_shop_1")
     shop.create(name="test_shop_2")
 
+    quantity = QuantityCrud(db)
+
     product_shop = ProductShopsCrud(db)
-    product_shop.create(product_id=1, shop_id=1, price=1.0)
-    product_shop.create(product_id=1, shop_id=2, price=2.0)
+    product_shop.create(product_id=1, shop_id=1, quantity_id=1, price=1.0)
+    product_shop.create(product_id=1, shop_id=2, quantity_id=1, price=2.0)
 
     category = CategoryCrud(db)
     category.create(name=CategoryType.food)

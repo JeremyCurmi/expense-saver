@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
-from typing import List, Optional
+from datetime import datetime
+from typing import Any, List, Optional
 
 from app import models, structs
 from sqlalchemy.orm import Session
@@ -33,6 +34,18 @@ class DBCrud(ABC):
         else:
             return self.db.query(self.model).all()
 
+    @abstractmethod
+    def delete_by_id(self, id: int) -> models.Base:
+        return self.db.query(self.model).filter(self.model.id == id).delete()
+
+    @abstractmethod
+    def update(self, id: int, *args, **kwargs) -> models.Base:
+        return (
+            self.db.query(self.model)
+            .filter(self.model.id == id)
+            .update(*args, **kwargs)
+        )
+
 
 class ProductCrud(DBCrud):
     def __init__(self, db: Session):
@@ -50,6 +63,16 @@ class ProductCrud(DBCrud):
 
     def get_all(self, limit: int = 0) -> List[models.Product]:
         return super().get_all(limit)
+
+    def delete_by_id(self, id: int) -> models.Product:
+        return super().delete_by_id(id)
+
+    def delete_by_name(self, name: str) -> Any:
+        return self.db.query(self.model).filter(self.model.name == name).delete()
+
+    def update(self, id: int, product: structs.ProductCreate) -> models.Product:
+        product.updated_at = datetime.now()
+        return super().update(id, product.dict())
 
 
 class ShopCrud(DBCrud):
@@ -104,7 +127,7 @@ class CategoryCrud(DBCrud):
     def get_by_id(self, id: int) -> Optional[models.Category]:
         return super().get_by_id(id)
 
-    def get_by_name(self, name: str) -> Optional[models.Shop]:
+    def get_by_name(self, name: str) -> Optional[models.Category]:
         return self.db.query(self.model).filter(self.model.name == name).first()
 
     def get_all(self, limit: int = 0) -> List[models.Category]:
@@ -136,3 +159,21 @@ class ProductCategoryCrud(DBCrud):
             .filter(self.model.category_id == category_id)
             .all()
         )
+
+
+class QuantityCrud(DBCrud):
+    def __init__(self, db: Session):
+        self.db = db
+        self.model = models.Quantity
+
+    def create(self, *args, **kwargs) -> models.Quantity:
+        return super().create(*args, **kwargs)
+
+    def get_by_id(self, id: int) -> Optional[models.Quantity]:
+        return super().get_by_id(id)
+
+    def get_by_name(self, name: str) -> Optional[models.Quantity]:
+        return self.db.query(self.model).filter(self.model.name == name).first()
+
+    def get_all(self, limit: int = 0) -> List[models.Quantity]:
+        return super().get_all(limit)

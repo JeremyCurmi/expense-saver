@@ -96,3 +96,6 @@ def test_product_category_creation(setup_db):
     assert len(product_category) == 1
     assert product_category[0].category_id == 4
     assert product_category[0].product_id == 1
+
+
+# TODO: test quantities

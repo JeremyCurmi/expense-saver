@@ -1,12 +1,18 @@
 from datetime import datetime
-from typing import Optional
+from typing import Any, Optional
 
 from pydantic import BaseModel
+
+
+class Response(BaseModel):
+    data: Optional[Any] = None
+    status_code: int = 200
 
 
 class ProductBase(BaseModel):
     name: str
     description: Optional[str]
+    updated_at: Optional[datetime] = datetime.now()
 
 
 class ProductCreate(ProductBase):
@@ -15,7 +21,6 @@ class ProductCreate(ProductBase):
 
 class Product(ProductBase):
     id: int
-    updated_at: datetime
 
     class Config:
         orm_mode = True

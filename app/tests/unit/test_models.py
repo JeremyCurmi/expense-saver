@@ -1,8 +1,7 @@
 import pytest
 from app import models
 from app.models import CategoryType, Product
-from app.services.services import (CategoryCrud, ProductCategoryCrud,
-                                   ProductShopsCrud)
+from app.services.services import CategoryCrud, ProductCategoryCrud, ProductShopsCrud
 from sqlalchemy.exc import IntegrityError
 
 
@@ -49,7 +48,9 @@ def test_product_category_creation(new_product_category):
 
 
 def test_product_shop_creation(new_product_shop):
-    assert_model_columns(new_product_shop, ["product_id", "shop_id", "price"])
+    assert_model_columns(
+        new_product_shop, ["product_id", "shop_id", "quantity_id", "price"]
+    )
     assert new_product_shop.product_id == 1
     assert new_product_shop.shop_id == 1
     assert isinstance(new_product_shop.price, float)
@@ -83,3 +84,6 @@ def test_product_category_primary_key_constraint(setup_db):
     except IntegrityError as err:
         setup_db.rollback()
     assert pytest.raises(IntegrityError)
+
+
+# TODO: test quantities
