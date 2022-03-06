@@ -130,8 +130,14 @@ class CategoryCrud(DBCrud):
     def get_by_name(self, name: str) -> Optional[models.Category]:
         return self.db.query(self.model).filter(self.model.name == name).first()
 
+    def delete_by_id(self, id: int) -> models.Product:
+        return super().delete_by_id(id)
+
     def get_all(self, limit: int = 0) -> List[models.Category]:
         return super().get_all(limit)
+
+    def update(self, id: int, category: structs.CategoryCreate) -> models.Category:
+        return super().update(id, category.dict())
 
 
 class ProductCategoryCrud(DBCrud):
