@@ -1,5 +1,5 @@
 from datetime import datetime
-from enum import Enum
+from enum import Enum, auto
 
 from app.core.db import Base
 from sqlalchemy import (
@@ -15,19 +15,12 @@ from sqlalchemy.orm import relationship
 from sqlalchemy_utils import ChoiceType
 
 
-class CategoryType(Enum):
-    # TODO: add more categories
-    food = 1
-    drink = 2
-    other = 3
-
-
 class Unit(Enum):
-    kg = 1
-    l = 2
-    g = 3
-    ml = 4
-    piece = 5
+    kg = auto()
+    l = auto()
+    g = auto()
+    ml = auto()
+    piece = auto()
 
 
 class Product(Base):
@@ -75,7 +68,7 @@ class Category(Base):
     __tablename__ = "categories"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    name = Column(ChoiceType(CategoryType, impl=Integer()), nullable=False, unique=True)
+    name = Column(String(50), nullable=False, unique=True)
     products = relationship(
         "Product", secondary="product_categories", back_populates="categories"
     )
