@@ -9,3 +9,7 @@ models.Base.metadata.create_all(bind=db.engine)
 app = FastAPI()
 app.include_router(products.router)
 app.include_router(category.router)
+
+@app.get("/")
+def index():
+    return "Hello world"
