@@ -1,8 +1,7 @@
 from fastapi import FastAPI
-from sqlalchemy.orm import Session
 
 from app import models
-from app.core import config, db
+from app.core import db
 from app.routers import category, products
 
 models.Base.metadata.create_all(bind=db.engine)
