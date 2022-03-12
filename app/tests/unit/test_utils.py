@@ -1,6 +1,6 @@
 import os
 
-from app.utils.utils import get_str_env
+from app.utils import get_str_env
 
 
 def test_valid_get_str_env(set_env_vars):

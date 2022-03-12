@@ -1,79 +1,8 @@
-from abc import ABC, abstractmethod
-from datetime import datetime
-from typing import Any, List, Optional
+from typing import List, Optional
 
-from app import models, structs
+from app import models, schemas
 from sqlalchemy.orm import Session
-
-
-class DBCrud(ABC):
-    model: models.Base
-    db: Session
-
-    def save(self, obj: models.Base) -> models.Base:
-        self.db.add(obj)
-        self.db.commit()
-        return obj
-
-    def save_all(self, objs: List[models.Base]):
-        self.db.add_all(objs)
-        self.db.commit()
-
-    @abstractmethod
-    def create(self, *args, **kwargs) -> models.Base:
-        return self.save(self.model(*args, **kwargs))
-
-    @abstractmethod
-    def get_by_id(self, id: int) -> models.Base:
-        return self.db.query(self.model).filter(self.model.id == id).first()
-
-    @abstractmethod
-    def get_all(self, limit: int = 0) -> List[models.Base]:
-        if limit:
-            return self.db.query(self.model).limit(limit).all()
-        else:
-            return self.db.query(self.model).all()
-
-    @abstractmethod
-    def delete_by_id(self, id: int) -> models.Base:
-        return self.db.query(self.model).filter(self.model.id == id).delete()
-
-    @abstractmethod
-    def update(self, id: int, *args, **kwargs) -> models.Base:
-        return (
-            self.db.query(self.model)
-            .filter(self.model.id == id)
-            .update(*args, **kwargs)
-        )
-
-
-class ProductCrud(DBCrud):
-    def __init__(self, db: Session):
-        self.db = db
-        self.model = models.Product
-
-    def create(self, *args, **kwargs) -> models.Product:
-        return super().create(*args, **kwargs)
-
-    def get_by_id(self, id: int) -> Optional[models.Product]:
-        return super().get_by_id(id)
-
-    def get_by_name(self, name: str) -> Optional[models.Product]:
-        return self.db.query(self.model).filter(self.model.name == name).first()
-
-    def get_all(self, limit: int = 0) -> List[models.Product]:
-        return super().get_all(limit)
-
-    def delete_by_id(self, id: int) -> models.Product:
-        return super().delete_by_id(id)
-
-    def delete_by_name(self, name: str) -> Any:
-        return self.db.query(self.model).filter(self.model.name == name).delete()
-
-    def update(self, id: int, product: structs.ProductCreate) -> models.Product:
-        product.updated_at = datetime.now()
-        return super().update(id, product.dict())
-
+from .base import DBCrud
 
 class ShopCrud(DBCrud):
     def __init__(self, db: Session):
@@ -136,7 +65,7 @@ class CategoryCrud(DBCrud):
     def get_all(self, limit: int = 0) -> List[models.Category]:
         return super().get_all(limit)
 
-    def update(self, id: int, category: structs.CategoryCreate) -> models.Category:
+    def update(self, id: int, category: schemas.CategoryCreate) -> models.Category:
         return super().update(id, category.dict())
 
 

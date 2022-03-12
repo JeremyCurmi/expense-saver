@@ -1,7 +1,7 @@
 import pytest
 from app import models
 from app.models import CategoryType, Product
-from app.services.services import CategoryCrud, ProductCategoryCrud, ProductShopsCrud
+from app.crud.crud_db import CategoryCrud, ProductCategoryCrud, ProductShopsCrud
 from sqlalchemy.exc import IntegrityError
 
 
