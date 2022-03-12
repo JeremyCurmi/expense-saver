@@ -12,10 +12,10 @@ class Settings(BaseSettings):
     API_URL: str = "/api/v1"
 
     # owner info
-    OWNER_ACCOUNT_NAME: str = "Jeris"
-    OWNER_EMAIL: str = "jeris@gmail.com"
-    OWNER_PHONE_NUMBER: int = 123
-    OWNER_PASSWORD: str = "test"
+    OWNER_ACCOUNT_NAME: str = utils.get_str_env("OWNER_ACCOUNT_NAME")
+    OWNER_EMAIL: str = utils.get_str_env("OWNER_EMAIL")
+    OWNER_PHONE_NUMBER: int = utils.get_str_env("OWNER_PHONE_NUMBER")
+    OWNER_PASSWORD: str = utils.get_str_env("OWNER_PASSWORD")
 
 
 
