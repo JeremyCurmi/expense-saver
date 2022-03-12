@@ -1,7 +1,7 @@
 from datetime import datetime
 from enum import Enum, auto
 
-from app.core.db import Base
+from app.db import Base
 from sqlalchemy import (
     Column,
     DateTime,
@@ -29,7 +29,7 @@ class Product(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(50), nullable=False, unique=True)
     description = Column(String(200), nullable=True)
-    updated_at = Column(DateTime, default=datetime.now())
+    updated_at = Column(DateTime, default=datetime.utcnow)
     shops = relationship("Shop", secondary="product_shops", back_populates="products")
     categories = relationship(
         "Category", secondary="product_categories", back_populates="products"
@@ -92,3 +92,5 @@ class Quantity(Base):
 
     def __repr__(self) -> str:
         return f"Quantity(unit={self.unit}, value={self.value})"
+
+

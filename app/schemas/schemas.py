@@ -12,7 +12,7 @@ class Response(BaseModel):
 class ProductBase(BaseModel):
     name: str
     description: Optional[str]
-    updated_at: Optional[datetime] = datetime.now()
+    updated_at: Optional[datetime] = datetime.utcnow()
 
 
 class ProductCreate(ProductBase):

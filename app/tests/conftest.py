@@ -2,7 +2,7 @@ import os
 from datetime import datetime
 from unicodedata import name
 
-from app.core.db import Base, SessionLocal
+from app.core.dependencies import Base, SessionLocal
 from app.models import (
     Category,
     CategoryType,
@@ -12,7 +12,7 @@ from app.models import (
     Shop,
 )
 from app.models.models import Quantity
-from app.services.services import (
+from app.crud.crud_db import (
     CategoryCrud,
     ProductCategoryCrud,
     ProductCrud,
@@ -37,7 +37,7 @@ def new_product():
     product = Product(
         id=1,
         name="test_product",
-        updated_at=datetime.now(),
+        updated_at=datetime.utcnow(),
     )
     return product
 

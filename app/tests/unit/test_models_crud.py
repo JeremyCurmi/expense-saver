@@ -2,7 +2,7 @@ from sqlite3 import IntegrityError
 
 import pytest
 from app.models import CategoryType, Product
-from app.services.services import (
+from app.crud.crud_db import (
     CategoryCrud,
     ProductCategoryCrud,
     ProductCrud,
